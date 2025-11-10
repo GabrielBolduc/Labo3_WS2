@@ -1,0 +1,10 @@
+<h1>Bienvenue sur notre site</h1>
+
+<ul>
+  <% @businesses.each do |business| %>
+    <li>
+      <%# Lien vers la page de détail publique %>
+      <%= link_to business.name, business_path(business) %>
+    </li>
+  <% end %>
+</ul>

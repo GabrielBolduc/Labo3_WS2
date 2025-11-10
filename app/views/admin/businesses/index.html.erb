@@ -1,0 +1,10 @@
+<h1>Liste ordonnée Z@A</h1>
+
+<ul>
+  <% @businesses.each do |business| %>
+    <li>
+      <%# Lien vers la page de détail administrative %>
+      <%= link_to business.name, admin_business_path(business) %>
+    </li>
+  <% end %>
+</ul>

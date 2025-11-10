@@ -1,0 +1,23 @@
+<h1><%= @business.name %></h1>
+
+<p><%= @business.description %></p>
+<%# CORRECTION: Remplacer .website par .web %>
+<p><%= link_to @business.web, @business.web %></p>
+
+<hr>
+
+<h2>Menus:</h2>
+<% @business.menus.each do |menu| %>
+  <h3><%= menu.title %>:</h3>
+  
+  <%# Affiche les items indentés %>
+  <ul>
+    <% menu.items.each do |item| %>
+      <li>
+        <strong><%= item.name %></strong> (<%= item.price %>$)
+        <br>
+        <%= item.description %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
