@@ -1,23 +1,31 @@
 <h1><%= @business.name %></h1>
 
 <p><%= @business.description %></p>
-<%# CORRECTION: Remplacer .website par .web %>
-<p><%= link_to @business.web, @business.web %></p>
+
+<% if @business.site_web.present? %>
+  <% url = @business.site_web.start_with?('http') ? @business.site_web : "http://#{@business.site_web}" %>
+  <p><%= link_to @business.site_web, url, target: "_blank", rel: "noopener" %></p>
+<% end %>
 
 <hr>
 
-<h2>Menus:</h2>
+<h2>Menu:</h2>
+
 <% @business.menus.each do |menu| %>
   <h3><%= menu.title %>:</h3>
-  
-  <%# Affiche les items indentés %>
-  <ul>
-    <% menu.items.each do |item| %>
-      <li>
-        <strong><%= item.name %></strong> (<%= item.price %>$)
-        <br>
-        <%= item.description %>
-      </li>
-    <% end %>
-  </ul>
+
+  <% if menu.items.any? %>
+    <ul>
+      <% menu.items.each do |item| %>
+        <li>
+          <strong><%= item.name %></strong>
+          <% if item.price.present? %> (<%= item.price %>$)<% end %>
+          <br>
+          <%= item.description %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Aucun item dans ce menu.</p>
+  <% end %>
 <% end %>

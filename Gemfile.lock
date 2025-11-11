@@ -368,6 +368,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   brakeman
+  builder
   capybara
   debug
   faker!
