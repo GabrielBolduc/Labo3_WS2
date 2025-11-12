@@ -1,3 +1,5 @@
+# Gabriel Bolduc 8 novembre 
+
 <h1><%= @business.name %></h1>
 
 <p><%= @business.description %></p>
@@ -11,21 +13,48 @@
 
 <h2>Menu:</h2>
 
-<% @business.menus.each do |menu| %>
-  <h3><%= menu.title %>:</h3>
+<%# Boucle sur les menus "racine" (ex: "Fin de semaine") %>
+<% @business.menus.each do |root_menu| %>
+  <h3><%= root_menu.title %>:</h3>
 
-  <% if menu.items.any? %>
-    <ul>
-      <% menu.items.each do |item| %>
-        <li>
-          <strong><%= item.name %></strong>
-          <% if item.price.present? %> (<%= item.price %>$)<% end %>
-          <br>
-          <%= item.description %>
-        </li>
+  <%# Boucle sur les sous-menus de ce menu (ex: "Dejeuner", "Diner", "Souper") %>
+  <% if root_menu.sub_menus.any? %>
+    <% root_menu.sub_menus.each do |sub_menu| %>
+      <h4 style="margin-left: 20px;"><%= sub_menu.title %></h4>
+
+      <%# Cherche les items DANS le sous-menu %>
+      <% if sub_menu.items.any? %>
+        <ul style="margin-left: 40px;">
+          <% sub_menu.items.each do |item| %>
+            <li>
+              <strong><%= item.name %></strong>
+              <% if item.price.present? %> (<%= item.price %>$)<% end %>
+              <br>
+              <%= item.description %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p style="margin-left: 40px;">Aucun item dans ce sous-menu.</p>
       <% end %>
-    </ul>
+    <% end %>
+    
   <% else %>
-    <p>Aucun item dans ce menu.</p>
+    <%# S'il n'y a pas de sous-menus, vérifie s'il y a des items directement sur le menu racine %>
+    <% if root_menu.items.any? %>
+      <ul>
+        <% root_menu.items.each do |item| %>
+          <li>
+            <strong><%= item.name %></strong>
+            <% if item.price.present? %> (<%= item.price %>$)<% end %>
+            <br>
+            <%= item.description %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <%# S'il n'y a ni sous-menu ni items... %>
+      <p>Aucun item dans ce menu.</p>
+    <% end %>
   <% end %>
 <% end %>

@@ -1,6 +1,5 @@
-class Item < ApplicationRecord
-  belongs_to :menu
+# Gabriel Bolduc 8 novembre
 
-  validates :name, presence: true
-  validates :price, numericality: true, allow_nil: true
+class Item < ApplicationRecord
+    belongs_to :menu
 end
