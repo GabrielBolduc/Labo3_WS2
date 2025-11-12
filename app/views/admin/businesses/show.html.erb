@@ -28,8 +28,8 @@
     </h3>
 
     <%# Boucle sur les sous-menus (ex: "Dejeuner", "Diner") %>
-    <% if root_menu.sub_menus.any? %>
-      <% root_menu.sub_menus.each do |sub_menu| %>
+    <% if root_menu.menus.any? %>
+      <% root_menu.menus.each do |sub_menu| %>
         <div style="padding-left: 30px; border-left: 2px solid ">
           <h4>
             <%= sub_menu.title %>

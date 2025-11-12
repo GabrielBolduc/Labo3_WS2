@@ -1,4 +1,4 @@
-# Gabriel Bolduc 8 novembre
+# Gabriel Bolduc
 
 # Notez que la classe est "Admin::BusinessesController"
 # et qu'elle hérite de "AdminController"
@@ -19,6 +19,7 @@ class Admin::BusinessesController < AdminController
   private
 
   def set_business
-    @business = Business.includes(menus: :items).find(params[:id])
+    # --- MODIFICATION ICI --- (sub_menus -> menus)
+    @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
   end
 end

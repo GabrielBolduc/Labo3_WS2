@@ -22,7 +22,8 @@ class BusinessesController < ApplicationController
         menus: {
           include: [
             :items,
-            { sub_menus: { include: :items } } 
+            # --- MODIFICATION ICI --- (sub_menus -> menus)
+            { menus: { include: :items } } 
           ]
         }
       }
@@ -39,7 +40,8 @@ class BusinessesController < ApplicationController
   private
 
   def set_business
-    @business = Business.includes(menus: [:items, { sub_menus: :items }]).find(params[:id])
+    # --- MODIFICATION ICI --- (sub_menus -> menus)
+    @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
   end
 
   def business_params
@@ -47,7 +49,8 @@ class BusinessesController < ApplicationController
       :name, :description, :phone, :email, :site_web,
       menus_attributes: [
         :id, :title, :_destroy,
-        sub_menus_attributes: [
+        # --- MODIFICATION ICI --- (sub_menus_attributes -> menus_attributes)
+        menus_attributes: [
           :id, :title, :_destroy,
           items_attributes: [:id, :name, :price, :description, :_destroy]
         ]
