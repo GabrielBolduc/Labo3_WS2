@@ -1,4 +1,4 @@
-# Gabriel Bolduc
+# Gabriel Bolduc 8 novembre
 
 # Notez que la classe est "Admin::BusinessesController"
 # et qu'elle hérite de "AdminController"
