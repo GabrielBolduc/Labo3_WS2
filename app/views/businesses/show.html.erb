@@ -11,16 +11,13 @@
 
 <h2>Menu:</h2>
 
-<%# Boucle sur les menus "racine" (ex: "Fin de semaine") %>
 <% @business.menus.each do |root_menu| %>
   <h3><%= root_menu.title %>:</h3>
 
-  <%# Boucle sur les sous-menus de ce menu (ex: "Dejeuner", "Diner", "Souper") %>
   <% if root_menu.menus.any? %>
     <% root_menu.menus.each do |sub_menu| %>
       <h4 style="margin-left: 20px;"><%= sub_menu.title %></h4>
 
-      <%# Cherche les items DANS le sous-menu %>
       <% if sub_menu.items.any? %>
         <ul style="margin-left: 40px;">
           <% sub_menu.items.each do |item| %>
@@ -53,8 +50,8 @@
         <% end %>
       </ul>
     <% else %>
-      <%# S'il n'y a ni sous-menu ni items... %>
-      <p>Aucun item dans ce menu.</p>
+
+      <p>Aucun item dans ce menu</p>
     <% end %>
   <% end %>
 <% end %>

@@ -1,11 +1,12 @@
 # Gabriel Bolduc 8 novembre
 
 class BusinessesController < ApplicationController
+
+  # execute set_business and d'execute show
   before_action :set_business, only: %i[show]
 
-  # GET /
+  # page d'accueil
   def index
-    # tri
     @businesses = Business.order(name: :asc)
 
     respond_to do |format|
@@ -15,14 +16,13 @@ class BusinessesController < ApplicationController
     end
   end
 
-  # GET /businesses/:id
+  # page de detail
   def show
     options_inclusion = {
       include: {
         menus: {
           include: [
             :items,
-            # --- MODIFICATION ICI --- (sub_menus -> menus)
             { menus: { include: :items } } 
           ]
         }
@@ -40,21 +40,8 @@ class BusinessesController < ApplicationController
   private
 
   def set_business
-    # --- MODIFICATION ICI --- (sub_menus -> menus)
     @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
+    # trouve entreprise
   end
 
-  def business_params
-    params.require(:business).permit(
-      :name, :description, :phone, :email, :site_web,
-      menus_attributes: [
-        :id, :title, :_destroy,
-        # --- MODIFICATION ICI --- (sub_menus_attributes -> menus_attributes)
-        menus_attributes: [
-          :id, :title, :_destroy,
-          items_attributes: [:id, :name, :price, :description, :_destroy]
-        ]
-      ]
-    )
-  end
 end

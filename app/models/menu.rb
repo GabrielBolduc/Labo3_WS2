@@ -8,7 +8,9 @@ class Menu < ApplicationRecord
 
   has_many :items, dependent: :destroy
 
+  # items attributs
   accepts_nested_attributes_for :items
   
+  # menu attributes
   accepts_nested_attributes_for :menus
 end
