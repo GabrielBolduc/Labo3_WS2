@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_11_162446) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_13_204456) do
   create_table "businesses", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -19,6 +19,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_162446) do
     t.string "site_web"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_businesses_on_user_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -43,5 +45,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_11_162446) do
     t.index ["parent_id"], name: "index_menus_on_parent_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "admin", default: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "businesses", "users"
   add_foreign_key "menus", "menus", column: "parent_id"
 end

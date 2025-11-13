@@ -1,0 +1,44 @@
+<%# Gabriel Bolduc %>
+<%# Vue pour /mesmenus %>
+
+<%# Définit le titre de l'onglet du navigateur %>
+<% content_for :title, @page_title %>
+
+<div style="margin-bottom: 20px;">
+  <h1><%= @page_title %></h1>
+  <p>Voici la liste des restaurants qui vous appartiennent et leurs menus associés.</p>
+</div>
+
+<%# Vérifie s'il y a des restaurants à afficher %>
+<% if @businesses.empty? %>
+
+  <p>Vous ne possédez actuellement aucun restaurant dans le système.</p>
+
+<% else %>
+
+  <%# Boucle sur chaque restaurant appartenant à l'utilisateur %>
+  <% @businesses.each do |business| %>
+    <article style="margin-bottom: 25px; border: 1px solid #eee; padding: 15px; border-radius: 8px; background: #fff;">
+      
+      <%# Titre cliquable qui mène à la page de détail (show) %>
+      <h2 style="margin-top: 0;">
+        <%= link_to business.name, my_menu_path(business) %>
+      </h2>
+      
+      <%# Vérifie si ce restaurant a des menus %>
+      <% if business.menus.where(parent_id: nil).any? %>
+        <strong>Menus principaux :</strong>
+        
+        <%# Affiche une liste simple des noms de menus (parents seulement) %>
+        <ul>
+          <% business.menus.where(parent_id: nil).each do |menu| %>
+            <li><%= menu.title %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p style="color: #555;">Ce restaurant n'a pas encore de menu.</p>
+      <% end %>
+
+    </article>
+  <% end %>
+<% end %>

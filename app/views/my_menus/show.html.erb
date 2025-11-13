@@ -1,0 +1,72 @@
+<%# Gabriel Bolduc %>
+<%# Vue pour /mesmenus/:id %>
+
+<% def render_menus(menus) %>
+  <%# 'capture' est nécessaire car nous sommes dans une méthode %>
+  <% return "" if menus.empty? %>
+
+  <%= capture do %>
+    <ul class="menu-list">
+      <% menus.each do |menu| %>
+        <li>
+          <div class="menu-item">
+            <div class="menu-title"><%= menu.title %></div>
+            
+            <%# Afficher les items (plats) de CE menu %>
+            <% if menu.items.any? %>
+              <ul class="item-list">
+                <% menu.items.each do |item| %>
+                  <li>
+                    <strong><%= item.name %></strong>
+                    (<%= number_to_currency(item.price) %>)
+                    <br>
+                    <small class="item-details"><%= item.description %></small>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+
+            <%# --- PARTIE RÉCURSIVE --- %>
+            <%# Si ce menu a des sous-menus, on rappelle cette même fonction %>
+            <%= render_menus(menu.menus) %>
+
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>
+
+
+
+<%# Définit le titre de l'onglet du navigateur %>
+<% content_for :title, @business.name %>
+
+<div style="margin-bottom: 20px;">
+  <h1><%= @business.name %></h1>
+  <p>Détail de votre restaurant.</p>
+</div>
+
+<%# Section d'information sur le restaurant %>
+<section >
+  <h3>Informations</h3>
+  <p>Description : <%= @business.description %></p>
+  <p><strong>Téléphone :</strong> <%= @business.phone %></p>
+  <p><strong>Courriel :</strong> <%= @business.email %></p>
+  <p><strong>Site web :</strong> <%= link_to @business.site_web, @business.site_web, target: "_blank", rel: "noopener" %></p>
+</section>
+
+
+
+<%# Section des menus %>
+<h2>Menus de <%= @business.name %></h2>
+
+<% if @business.menus.where(parent_id: nil).any? %>
+  <%# On lance l'affichage en commençant par les menus racines (parents) %>
+  <%= render_menus(@business.menus.where(parent_id: nil)) %>
+<% else %>
+  <p>Il n'y a pas de menu pour ce restaurant.</p>
+<% end %>
+
+<br>
+<%= link_to "← Retour à la liste de mes restaurants", mesmenus_path %>
