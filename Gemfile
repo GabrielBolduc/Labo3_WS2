@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem 'devise', '~> 4.9', '>= 4.9.4'
+
 gem "builder"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
