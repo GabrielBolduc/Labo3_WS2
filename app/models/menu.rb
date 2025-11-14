@@ -1,4 +1,5 @@
 # Gabriel Bolduc 8 novembre
+
 class Menu < ApplicationRecord
   belongs_to :business, optional: true
 

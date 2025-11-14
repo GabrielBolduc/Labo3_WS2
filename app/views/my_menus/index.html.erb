@@ -1,12 +1,10 @@
 <%# Gabriel Bolduc %>
-<%# Vue pour /mesmenus %>
 
 <%# Définit le titre de l'onglet du navigateur %>
 <% content_for :title, @page_title %>
 
 <div style="margin-bottom: 20px;">
   <h1><%= @page_title %></h1>
-  <p>Voici la liste des restaurants qui vous appartiennent et leurs menus associés.</p>
 </div>
 
 <%# Vérifie s'il y a des restaurants à afficher %>
@@ -25,7 +23,7 @@
         <%= link_to business.name, my_menu_path(business) %>
       </h2>
       
-      <%# Vérifie si ce restaurant a des menus %>
+     
       <% if business.menus.where(parent_id: nil).any? %>
         <strong>Menus principaux :</strong>
         

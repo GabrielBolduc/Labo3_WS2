@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= content_for(:title) || "Restaurant" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+  <head>
+   <title><%= content_for(:title) || "Restaurant" %></title>
+   <meta name="viewport" content="width=device-width,initial-scale=1">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="mobile-web-app-capable" content="yes">
+   <%= csrf_meta_tags %>
+   <%= csp_meta_tag %>
 
-    <%= yield :head %>
+    <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
@@ -21,7 +20,6 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <%# --- CSS de base pour les messages flash de Devise et la navigation --- %>
     <style>
       
       header { 
@@ -36,78 +34,51 @@
         max-width: 960px;
         margin: 0 auto;
       }
-      nav .auth form, nav .auth input[type="submit"], nav .auth button { 
-        margin-bottom: 0; 
-        display: inline;
-        font-size: 0.9em;
-        border: none;
-        background: none;
-        color: #007bff;
-        padding: 0;
-        margin-left: 10px;
-        cursor: pointer;
-        font-family: inherit;
-      }
-      nav .auth input[type="submit"]:hover, nav .auth button:hover {
-        text-decoration: underline;
-      }
       .container { 
         max-width: 960px; 
         margin: 20px auto; 
         padding: 0 20px; 
       }
     </style>
-    <%# --- FIN DU CSS --- %>
+    </head>
 
-  </head>
-
-  <body>
-    <%# --- MISE À JOUR DE LA BARRE DE NAVIGATION --- %>
+    <body>
     <header>
       <nav>
         <div class="links">
-          <%= link_to "Accueil Public", root_path %>
+          <%= link_to "Accueil", root_path %>
           
-          <%# Ces liens ne s'affichent que si l'utilisateur est connecté %>
           <% if user_signed_in? %>
-            
-            <%# 1. Lien "Mes Menus" (pour tous les utilisateurs connectés) %>
-            | <%= link_to "Mes Menus", mesmenus_path %>
-            
-            <%# 2. Lien "Section Admin" (UNIQUEMENT si .admin? est vrai) %>
-            <% if current_user.admin? %>
-              | <%= link_to "Section Admin", admin_root_path, style: "color: red; font-weight: bold;" %>
-            <% end %>
+            <%= link_to "Mes Menus", mesmenus_path %>
+          <% if current_user.admin? %>
+              <%= link_to "Section Admin", admin_root_path %>
+          <% end %>
 
           <% end %>
         </div>
 
         <div class="auth">
-          <%# Affiche l'état de connexion %>
           <% if user_signed_in? %>
-            <span class="user-email">Connecté: <%= current_user.email %></span>
+            <span class="user-email">Connect: <%= current_user.email %></span>
             <%= link_to "Modifier Compte", edit_user_registration_path %>
-            <%= button_to "Déconnexion", destroy_user_session_path, method: :delete %>
+            <%= button_to "Deconnexion", destroy_user_session_path, method: :delete %>
           <% else %>
             <%= link_to "Connexion", new_user_session_path %> |
             <%= link_to "Inscription", new_user_registration_path %>
           <% end %>
-        </div>
       </nav>
     </header>
-    <%# --- FIN DE LA MISE À JOUR --- %>
 
     <main class="container">
-      <%# --- Messages Flash (déjà ajoutés) --- %>
       <% if notice.present? %>
         <p class="notice"><%= notice %></p>
       <% end %>
       <% if alert.present? %>
         <p class="alert"><%= alert %></p>
       <% end %>
-      <%# --- FIN DES MESSAGES --- %>
+      
 
-      <%= yield %>
+      <%= yield %>
     </main>
-  </body>
+    </body>
 </html>

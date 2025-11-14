@@ -7,7 +7,12 @@ class BusinessesController < ApplicationController
 
   # page d'accueil
   def index
-    @businesses = Business.order(name: :asc)
+    if user_signed_in? && !current_user.admin?
+      # affiche seulement businesses du user 
+      @businesses = current_user.businesses.includes(menus: [:items, { menus: :items }]).order(name: :asc)
+    else
+      @businesses = Business.includes(menus: [:items, { menus: :items }]).order(name: :asc)
+    end
 
     respond_to do |format|
       format.html
@@ -40,8 +45,12 @@ class BusinessesController < ApplicationController
   private
 
   def set_business
-    @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
-    # trouve entreprise
+    if user_signed_in? && !current_user.admin?
+      # Affiche seulement business du user
+      @business = current_user.businesses.includes(menus: [:items, { menus: :items }]).find(params[:id])
+    else
+      @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
+    end
   end
 
 end

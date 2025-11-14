@@ -2,29 +2,31 @@
 service: restaurant
 
 # Name of the container image.
+# REMPLACER "your-user" PAR VOTRE NOM D'UTILISATEUR DOCKER HUB
 image: your-user/restaurant
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 202282325.system.shawinigan.info
   # job:
   #   hosts:
   #     - 192.168.0.1
   #   cmd: bin/jobs
 
-# Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
-# Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
-#
-# Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
+# Configuration du proxy pour votre sous-domaine
 proxy:
-  ssl: true
-  host: app.example.com
+  # MODIFIÉ: ssl: false car votre serveur est en http://
+  ssl: false
+  # MODIFIÉ: Doit correspondre à l'adresse de votre serveur
+  host: 202282325.system.shawinigan.info
 
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
+  
+  # REMPLACER "your-user" PAR VOTRE NOM D'UTILISATEUR DOCKER HUB
   username: your-user
 
   # Always use an access token rather than real password when possible.
@@ -87,9 +89,13 @@ builder:
   #   - GITHUB_TOKEN
   #   - RAILS_MASTER_KEY
 
-# Use a different ssh user than root
-# ssh:
-#   user: app
+# --- AJOUT IMPORTANT ---
+# Spécifie l'utilisateur (root) et le port (2038) pour la connexion SSH
+ssh:
+  user: root
+  port: 2038
+# --- FIN DE L'AJOUT ---
+
 
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:

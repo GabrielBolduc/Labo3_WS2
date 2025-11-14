@@ -1,72 +1,83 @@
 <%# Gabriel Bolduc %>
 <%# Vue pour /mesmenus/:id %>
-
-<% def render_menus(menus) %>
-  <%# 'capture' est nécessaire car nous sommes dans une méthode %>
-  <% return "" if menus.empty? %>
-
-  <%= capture do %>
-    <ul class="menu-list">
-      <% menus.each do |menu| %>
-        <li>
-          <div class="menu-item">
-            <div class="menu-title"><%= menu.title %></div>
-            
-            <%# Afficher les items (plats) de CE menu %>
-            <% if menu.items.any? %>
-              <ul class="item-list">
-                <% menu.items.each do |item| %>
-                  <li>
-                    <strong><%= item.name %></strong>
-                    (<%= number_to_currency(item.price) %>)
-                    <br>
-                    <small class="item-details"><%= item.description %></small>
-                  </li>
-                <% end %>
-              </ul>
-            <% end %>
-
-            <%# --- PARTIE RÉCURSIVE --- %>
-            <%# Si ce menu a des sous-menus, on rappelle cette même fonction %>
-            <%= render_menus(menu.menus) %>
-
-          </div>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
-<% end %>
-
-
+<%# Style basé sur /businesses/show.html.erb %>
 
 <%# Définit le titre de l'onglet du navigateur %>
 <% content_for :title, @business.name %>
 
-<div style="margin-bottom: 20px;">
-  <h1><%= @business.name %></h1>
-  <p>Détail de votre restaurant.</p>
-</div>
+<%# Titre clair (Req. 5) %>
+<h1><%= @business.name %></h1>
 
 <%# Section d'information sur le restaurant %>
-<section >
-  <h3>Informations</h3>
-  <p>Description : <%= @business.description %></p>
-  <p><strong>Téléphone :</strong> <%= @business.phone %></p>
-  <p><strong>Courriel :</strong> <%= @business.email %></p>
-  <p><strong>Site web :</strong> <%= link_to @business.site_web, @business.site_web, target: "_blank", rel: "noopener" %></p>
-</section>
+<%# Logique de businesses/show.html.erb %>
+<p><strong>Description :</strong> <%= @business.description %></p>
 
+<%# Champs supplémentaires de la vue my_menus originale %>
+<p><strong>Téléphone :</strong> <%= @business.phone %></p>
+<p><strong>Courriel :</strong> <%= @business.email %></p>
 
-
-<%# Section des menus %>
-<h2>Menus de <%= @business.name %></h2>
-
-<% if @business.menus.where(parent_id: nil).any? %>
-  <%# On lance l'affichage en commençant par les menus racines (parents) %>
-  <%= render_menus(@business.menus.where(parent_id: nil)) %>
-<% else %>
-  <p>Il n'y a pas de menu pour ce restaurant.</p>
+<%# Logique du site web de businesses/show.html.erb %>
+<% if @business.site_web.present? %>
+  <% url = @business.site_web.start_with?('http') ? @business.site_web : "http://#{@business.site_web}" %>
+  <p><strong>Site web :</strong> <%= link_to @business.site_web, url, target: "_blank", rel: "noopener" %></p>
 <% end %>
 
-<br>
-<%= link_to "← Retour à la liste de mes restaurants", mesmenus_path %>
+<hr>
+
+<h2>Menu:</h2>
+
+<%# 
+  Logique d'affichage des menus copiée de businesses/show.html.erb 
+  MAIS avec le filtre .where(parent_id: nil) pour ne commencer 
+  qu'avec les menus racines.
+%>
+<% @business.menus.where(parent_id: nil).each do |root_menu| %>
+  <h3><%= root_menu.title %>:</h3>
+
+  <%# Cas 1: Le menu racine a des sous-menus %>
+  <% if root_menu.menus.any? %>
+    <% root_menu.menus.each do |sub_menu| %>
+      <h4 style="margin-left: 20px;"><%= sub_menu.title %></h4>
+
+      <% if sub_menu.items.any? %>
+        <ul style="margin-left: 40px;">
+          <% sub_menu.items.each do |item| %>
+            <li>
+              <strong><%= item.name %></strong>
+              
+              <%# Format de prix de businesses/show.html.erb %>
+              <% if item.price.present? %>
+                (<%= item.price %>$)
+              <% end %>
+              <br>
+              <%= item.description %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p style="margin-left: 40px;">Aucun item dans ce sous-menu.</p>
+      <% end %>
+    <% end %>
+    
+  <%# Cas 2: Le menu racine n'a PAS de sous-menus (il a ses propres items) %>
+  <% else %>
+    <% if root_menu.items.any? %>
+      <ul>
+        <% root_menu.items.each do |item| %>
+          <li>
+            <strong><%= item.name %></strong>
+            
+            <%# Format de prix de businesses/show.html.erb %>
+            <% if item.price.present? %>
+              (<%= item.price %>$)
+            <% end %>
+            <br>
+            <%= item.description %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>Aucun item dans ce menu</p>
+    <% end %>
+  <% end %>
+<% end %>
