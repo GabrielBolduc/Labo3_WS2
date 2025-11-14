@@ -1,40 +1,22 @@
-<%# Gabriel Bolduc %>
-<%# Vue pour /mesmenus/:id %>
-<%# Style basé sur /businesses/show.html.erb %>
-
-<%# Définit le titre de l'onglet du navigateur %>
 <% content_for :title, @business.name %>
 
-<%# Titre clair (Req. 5) %>
 <h1><%= @business.name %></h1>
 
-<%# Section d'information sur le restaurant %>
-<%# Logique de businesses/show.html.erb %>
-<p><strong>Description :</strong> <%= @business.description %></p>
+<p><%= @business.description %></p>
 
-<%# Champs supplémentaires de la vue my_menus originale %>
-<p><strong>Téléphone :</strong> <%= @business.phone %></p>
-<p><strong>Courriel :</strong> <%= @business.email %></p>
 
-<%# Logique du site web de businesses/show.html.erb %>
 <% if @business.site_web.present? %>
   <% url = @business.site_web.start_with?('http') ? @business.site_web : "http://#{@business.site_web}" %>
-  <p><strong>Site web :</strong> <%= link_to @business.site_web, url, target: "_blank", rel: "noopener" %></p>
+  <p><%= link_to @business.site_web, url, target: "_blank", rel: "noopener" %></p>
 <% end %>
 
 <hr>
 
 <h2>Menu:</h2>
 
-<%# 
-  Logique d'affichage des menus copiée de businesses/show.html.erb 
-  MAIS avec le filtre .where(parent_id: nil) pour ne commencer 
-  qu'avec les menus racines.
-%>
 <% @business.menus.where(parent_id: nil).each do |root_menu| %>
   <h3><%= root_menu.title %>:</h3>
 
-  <%# Cas 1: Le menu racine a des sous-menus %>
   <% if root_menu.menus.any? %>
     <% root_menu.menus.each do |sub_menu| %>
       <h4 style="margin-left: 20px;"><%= sub_menu.title %></h4>
@@ -45,7 +27,6 @@
             <li>
               <strong><%= item.name %></strong>
               
-              <%# Format de prix de businesses/show.html.erb %>
               <% if item.price.present? %>
                 (<%= item.price %>$)
               <% end %>
@@ -59,15 +40,12 @@
       <% end %>
     <% end %>
     
-  <%# Cas 2: Le menu racine n'a PAS de sous-menus (il a ses propres items) %>
   <% else %>
     <% if root_menu.items.any? %>
       <ul>
         <% root_menu.items.each do |item| %>
           <li>
             <strong><%= item.name %></strong>
-            
-            <%# Format de prix de businesses/show.html.erb %>
             <% if item.price.present? %>
               (<%= item.price %>$)
             <% end %>
