@@ -1,3 +1,4 @@
+<!-- Gabriel Bolduc 13 novembre -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,8 +24,6 @@
     <style>
       
       header { 
-        background-color: #fff; 
-        border-bottom: 1px solid #e0e0e0; 
         padding: 15px 30px; 
       }
       nav { 
@@ -51,7 +50,7 @@
           <% if user_signed_in? %>
             <%= link_to "Mes Menus", mesmenus_path %>
           <% if current_user.admin? %>
-              <%= link_to "Section Admin", admin_root_path %>
+            <%= link_to "Section Admin", admin_root_path %>
           <% end %>
 
           <% end %>

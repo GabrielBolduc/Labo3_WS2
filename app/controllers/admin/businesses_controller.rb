@@ -14,7 +14,7 @@ class Admin::BusinessesController < AdminController
   private
 
   def set_business
-    @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
+    @business = Business.includes(:menus).find(params[:id])
     # trouve entreprise
   end
 end

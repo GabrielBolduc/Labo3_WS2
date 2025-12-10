@@ -1,3 +1,4 @@
+<%# Gabriel Bolduc 13 novembre %>
 <h1><%= @business.name %></h1>
 
 <p>
@@ -7,38 +8,21 @@
 
 <% if @business.site_web.present? %>
   <% url = @business.site_web.start_with?('http') ? @business.site_web : "http://#{@business.site_web}" %>
-  <p>
-    <strong>Site Web:</strong>
-    <%= link_to @business.site_web, url, target: "_blank", rel: "noopener" %>
-  </p>
+  <p> <%= link_to @business.site_web, url, target: "_blank", rel: "noopener" %></p>
 <% end %>
 
 <hr>
 
-<h2>Gestion des Menus</h2>
-
-<%# Boucle sur les menus "racine" (ex: "Fin de semaine") %>
 <% @business.menus.each do |root_menu| %>
-  <div style="padding-left: 20px; border-left: 2px solid #ccc; margin-bottom: 15px;">
-    <h3>
-      <%= root_menu.title %>
-      <%# Liens pour gérer le menu racine %>
-      <%# link_to 'Modifier', edit_admin_menu_path(root_menu) %>
-      <%# link_to 'Supprimer', admin_menu_path(root_menu), data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' } %>
-    </h3>
+  <div>
 
-    <%# Boucle sur les sous-menus (ex: "Dejeuner", "Diner") %>
     <% if root_menu.menus.any? %>
       <% root_menu.menus.each do |sub_menu| %>
-        <div style="padding-left: 30px; border-left: 2px solid ">
+        <div>
           <h4>
             <%= sub_menu.title %>
-            <%# Liens pour gérer le sous-menu %>
-            <%# link_to 'Modifier', edit_admin_menu_path(sub_menu) %>
-            <%# link_to 'Supprimer', admin_menu_path(sub_menu), data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' } %>
           </h4>
 
-          <%# Affiche les items DANS le sous-menu %>
           <% if sub_menu.items.any? %>
             <ul>
               <% sub_menu.items.each do |item| %>
@@ -47,9 +31,6 @@
                   <% if item.price.present? %> (<%= item.price %>$)<% end %>
                   <br>
                   <%= item.description %>
-                  <%# Liens pour gérer l'item %>
-                  <%# link_to 'Modifier', edit_admin_item_path(item) %>
-                  <%# link_to 'Supprimer', admin_item_path(item), data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' } %>
                 </li>
               <% end %>
             </ul>
@@ -59,7 +40,6 @@
         </div>
       <% end %>
     <% else %>
-      <%# Gère le cas où le menu racine a des items mais pas de sous-menus %>
       <% if root_menu.items.any? %>
         <ul>
           <% root_menu.items.each do |item| %>
@@ -68,9 +48,6 @@
               <% if item.price.present? %> (<%= item.price %>$)<% end %>
               <br>
               <%= item.description %>
-               <%# Liens pour gérer l'item %>
-               <%# link_to 'Modifier', edit_admin_item_path(item) %>
-               <%# link_to 'Supprimer', admin_item_path(item), data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' } %>
             </li>
           <% end %>
         </ul>

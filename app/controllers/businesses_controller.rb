@@ -9,9 +9,9 @@ class BusinessesController < ApplicationController
   def index
     if user_signed_in? && !current_user.admin?
       # affiche seulement businesses du user 
-      @businesses = current_user.businesses.includes(menus: [:items, { menus: :items }]).order(name: :asc)
+      @businesses = current_user.businesses.includes(:menus).order(name: :asc)
     else
-      @businesses = Business.includes(menus: [:items, { menus: :items }]).order(name: :asc)
+      @businesses = Business.includes(:menus).order(name: :asc)
     end
 
     respond_to do |format|
@@ -23,16 +23,9 @@ class BusinessesController < ApplicationController
 
   # page de detail
   def show
-    options_inclusion = {
-      include: {
-        menus: {
-          include: [
-            :items,
-            { menus: { include: :items } } 
-          ]
-        }
-      }
-    }
+    @business = Business
+    .includes(menus: [:items, { menus: :items }])
+    .find(params[:id])
 
     respond_to do |format|
       format.html 
@@ -47,9 +40,9 @@ class BusinessesController < ApplicationController
   def set_business
     if user_signed_in? && !current_user.admin?
       # Affiche seulement business du user
-      @business = current_user.businesses.includes(menus: [:items, { menus: :items }]).find(params[:id])
+      @business = current_user.businesses.includes(:menus).find(params[:id])
     else
-      @business = Business.includes(menus: [:items, { menus: :items }]).find(params[:id])
+      @business = Business.includes(:menus).find(params[:id])
     end
   end
 
